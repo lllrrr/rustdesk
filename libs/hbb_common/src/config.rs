@@ -1871,7 +1871,28 @@ pub struct LocalConfig {
 
 impl LocalConfig {
     fn load() -> LocalConfig {
-        Config::load_::<LocalConfig>("_local")
+        let mut config = Config::load_::<LocalConfig>("_local");
+        let mut store = false;
+        if !config.options.contains_key("theme") {
+            config.options.insert("theme".to_string(), "dark".to_string());
+            store = true;
+        }
+        if !config.options.contains_key("enable-check-update") {
+            config.options.insert("enable-check-update".to_string(), "N".to_string());
+            store = true;
+        }
+        if !config.options.contains_key("enable-udp-punch") {
+            config.options.insert("enable-udp-punch".to_string(), "Y".to_string());
+            store = true;
+        }
+        if !config.options.contains_key("enable-ipv6-punch") {
+            config.options.insert("enable-ipv6-punch".to_string(), "Y".to_string());
+            store = true;
+        }
+        if store {
+            config.store();
+        }
+        config
     }
 
     fn store(&self) {
